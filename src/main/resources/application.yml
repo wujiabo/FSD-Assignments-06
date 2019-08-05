@@ -1,0 +1,10 @@
+spring:
+  h2:
+    console:
+      enabled: true
+
+jwt:
+  header: Authorization
+  secret: mySecret
+  expiration: 86400
+  tokenHead: "Bearer "
