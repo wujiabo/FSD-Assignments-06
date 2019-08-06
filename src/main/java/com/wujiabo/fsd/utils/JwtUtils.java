@@ -1,12 +1,12 @@
 package com.wujiabo.fsd.utils;
 
+import com.alibaba.fastjson.JSON;
 import com.wujiabo.fsd.domain.auth.Role;
 import com.wujiabo.fsd.domain.auth.UserDetail;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.CompressionCodecs;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.noggit.JSONUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -42,7 +42,7 @@ public class JwtUtils {
             long userId = getUserIdFromToken(token);
             String username = claims.getSubject();
             String roleName = claims.get(CLAIM_KEY_AUTHORITIES).toString();
-            Role role = Role.builder().name(roleName).build();
+            Role role = new Role(null,roleName,null);
             userDetail = new UserDetail(userId, username, role, "");
         } catch (Exception e) {
             userDetail = null;
@@ -134,7 +134,7 @@ public class JwtUtils {
         Map<String, Object> claims = generateClaims(userDetail);
         // 只授于更新 token 的权限
         String roles[] = new String[]{JwtUtils.ROLE_REFRESH_TOKEN};
-        claims.put(CLAIM_KEY_AUTHORITIES, JSONUtil.toJSON(roles));
+        claims.put(CLAIM_KEY_AUTHORITIES, JSON.toJSON(roles));
         return generateRefreshToken(userDetail.getUsername(), claims);
     }
 
