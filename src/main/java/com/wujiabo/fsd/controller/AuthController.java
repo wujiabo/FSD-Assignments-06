@@ -73,7 +73,7 @@ public class AuthController {
     }
 
     @PostMapping(value = "/chgPwd")
-    @ApiOperation(value = "用户注册")
+    @ApiOperation(value = "修改密码")
     public ResultJson chgPassword(HttpServletRequest request,@RequestBody UserExt userExt) {
         String token = request.getHeader(tokenHeader);
         if (token == null) {
