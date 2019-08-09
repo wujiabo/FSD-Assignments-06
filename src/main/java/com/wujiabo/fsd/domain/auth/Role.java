@@ -1,21 +1,21 @@
 package com.wujiabo.fsd.domain.auth;
 
 public class Role {
-    private Long id;
+    private Integer id;
     private String name;
     private String nameZh;
 
-    public Role(Long id, String name, String nameZh) {
+    public Role(Integer id, String name, String nameZh) {
         this.id = id;
         this.name = name;
         this.nameZh = nameZh;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

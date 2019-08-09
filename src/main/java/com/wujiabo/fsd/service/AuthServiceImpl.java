@@ -52,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
         userDetail.setPassword(encoder.encode(rawPassword));
         userDetail.setLastPasswordResetDate(new Date());
         authMapper.insert(userDetail);
-        long roleId = userDetail.getRole().getId();
+        Integer roleId = userDetail.getRole().getId();
         Role role = authMapper.findRoleById(roleId);
         userDetail.setRole(role);
         authMapper.insertRole(userDetail.getId(), roleId);

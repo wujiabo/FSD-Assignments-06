@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface AuthMapper {
 
-    @Select("SELECT id, name, password from sys_user where name = #{name}")
+    @Select("SELECT id, name as username, password from sys_user where name = #{name}")
     UserDetail findByUsername(@Param("name") String name);
 
     @Insert("insert into sys_user (name, password) VALUES (#{username}, #{password})")
@@ -22,6 +22,6 @@ public interface AuthMapper {
     @Select("select id, name, nameZh from sys_role where id = #{roleId}")
     Role findRoleById(@Param("roleId") long roleId);
 
-    @Select("select * from sys_role where id in (SELECT role_id from sys_user_role where user_id = #{userId})")
+    @Select("select a.* from sys_role a , sys_user_role b where a.id=b.role_id and b.user_id=#{userId}")
     Role findRoleByUserId(@Param("userId") long userId);
 }

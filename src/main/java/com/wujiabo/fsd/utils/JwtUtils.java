@@ -39,7 +39,7 @@ public class JwtUtils {
         UserDetail userDetail;
         try {
             final Claims claims = getClaimsFromToken(token);
-            long userId = getUserIdFromToken(token);
+            Integer userId = getUserIdFromToken(token);
             String username = claims.getSubject();
             String roleName = claims.get(CLAIM_KEY_AUTHORITIES).toString();
             Role role = new Role(null,roleName,null);
@@ -50,11 +50,11 @@ public class JwtUtils {
         return userDetail;
     }
 
-    public long getUserIdFromToken(String token) {
-        long userId;
+    public Integer getUserIdFromToken(String token) {
+        Integer userId;
         try {
             final Claims claims = getClaimsFromToken(token);
-            userId = Long.parseLong(String.valueOf(claims.get(CLAIM_KEY_USER_ID)));
+            userId = Integer.valueOf(String.valueOf(claims.get(CLAIM_KEY_USER_ID)));
         } catch (Exception e) {
             userId = 0;
         }

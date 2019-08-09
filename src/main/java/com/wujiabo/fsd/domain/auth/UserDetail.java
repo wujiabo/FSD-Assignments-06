@@ -10,14 +10,16 @@ import java.util.Date;
 import java.util.List;
 
 public class UserDetail implements UserDetails {
-    private long id;
+    private Integer id;
     private String username;
     private String password;
     private Role role;
     private Date lastPasswordResetDate;
 
+
+
     public UserDetail(
-            long id,
+            Integer id,
             String username,
             Role role,
 //            Date lastPasswordResetDate,
@@ -35,7 +37,7 @@ public class UserDetail implements UserDetails {
         this.role = role;
     }
 
-    public UserDetail(long id, String username, String password) {
+    public UserDetail(Integer id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -49,7 +51,7 @@ public class UserDetail implements UserDetails {
         return authorities;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -105,7 +107,7 @@ public class UserDetail implements UserDetails {
         this.role = role;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
