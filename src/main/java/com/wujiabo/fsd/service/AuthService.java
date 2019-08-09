@@ -2,6 +2,7 @@ package com.wujiabo.fsd.service;
 
 import com.wujiabo.fsd.domain.auth.ResponseUserToken;
 import com.wujiabo.fsd.domain.auth.UserDetail;
+import com.wujiabo.fsd.domain.auth.UserExt;
 
 public interface AuthService {
     /**
@@ -38,4 +39,11 @@ public interface AuthService {
      * @return
      */
     UserDetail getUserByToken(String token);
+
+    /**
+     * 修改密码
+     * @param token
+     * @param userExt
+     */
+    void chgPassword(String token, UserExt userExt);
 }

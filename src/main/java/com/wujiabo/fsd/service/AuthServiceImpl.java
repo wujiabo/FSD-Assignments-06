@@ -5,9 +5,11 @@ import com.wujiabo.fsd.domain.ResultJson;
 import com.wujiabo.fsd.domain.auth.ResponseUserToken;
 import com.wujiabo.fsd.domain.auth.Role;
 import com.wujiabo.fsd.domain.auth.UserDetail;
+import com.wujiabo.fsd.domain.auth.UserExt;
 import com.wujiabo.fsd.exception.CustomException;
 import com.wujiabo.fsd.mapper.AuthMapper;
 import com.wujiabo.fsd.utils.JwtUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -42,6 +45,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public UserDetail register(UserDetail userDetail) {
         final String username = userDetail.getUsername();
         if(authMapper.findByUsername(username)!=null) {
@@ -52,10 +56,9 @@ public class AuthServiceImpl implements AuthService {
         userDetail.setPassword(encoder.encode(rawPassword));
         userDetail.setLastPasswordResetDate(new Date());
         authMapper.insert(userDetail);
-        Integer roleId = userDetail.getRole().getId();
-        Role role = authMapper.findRoleById(roleId);
+        Role role = authMapper.findRoleById(2);
         userDetail.setRole(role);
-        authMapper.insertRole(userDetail.getId(), roleId);
+        authMapper.insertRole(userDetail.getId(), 2);
         return userDetail;
     }
 
@@ -97,6 +100,20 @@ public class AuthServiceImpl implements AuthService {
     public UserDetail getUserByToken(String token) {
         token = token.substring(tokenHead.length());
         return jwtTokenUtil.getUserFromToken(token);
+    }
+
+    @Override
+    @Transactional
+    public void chgPassword(String token, UserExt userExt) {
+        token = token.substring(tokenHead.length());
+        String userName = jwtTokenUtil.getUsernameFromToken(token);
+        UserDetail userDetail = authMapper.findByUsername(userName);
+        if(!StringUtils.equals(userExt.getPassword(),userDetail.getPassword())){
+            throw new CustomException(ResultJson.failure(ResultCode.BAD_REQUEST, "密码验证错误"));
+        }
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        userDetail.setPassword(encoder.encode(userExt.getNewPassword()));
+        authMapper.updatePassword(userDetail);
     }
 
     private Authentication authenticate(String username, String password) {

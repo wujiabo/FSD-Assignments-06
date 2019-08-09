@@ -2,10 +2,7 @@ package com.wujiabo.fsd.mapper;
 
 import com.wujiabo.fsd.domain.auth.Role;
 import com.wujiabo.fsd.domain.auth.UserDetail;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface AuthMapper {
@@ -24,4 +21,7 @@ public interface AuthMapper {
 
     @Select("select a.* from sys_role a , sys_user_role b where a.id=b.role_id and b.user_id=#{userId}")
     Role findRoleByUserId(@Param("userId") long userId);
+
+    @Update("update sys_user set password=#{password} where name = #{name}")
+    void updatePassword(UserDetail userDetail);
 }

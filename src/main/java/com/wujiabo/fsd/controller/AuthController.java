@@ -2,10 +2,7 @@ package com.wujiabo.fsd.controller;
 
 import com.wujiabo.fsd.domain.ResultCode;
 import com.wujiabo.fsd.domain.ResultJson;
-import com.wujiabo.fsd.domain.auth.Role;
-import com.wujiabo.fsd.domain.auth.User;
-import com.wujiabo.fsd.domain.auth.ResponseUserToken;
-import com.wujiabo.fsd.domain.auth.UserDetail;
+import com.wujiabo.fsd.domain.auth.*;
 import com.wujiabo.fsd.service.AuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -74,6 +71,21 @@ public class AuthController {
         UserDetail userDetail = new UserDetail(user.getName(), user.getPassword());
         return ResultJson.ok(authService.register(userDetail));
     }
+
+    @PostMapping(value = "/chgPwd")
+    @ApiOperation(value = "用户注册")
+    public ResultJson chgPassword(HttpServletRequest request,@RequestBody UserExt userExt) {
+        String token = request.getHeader(tokenHeader);
+        if (token == null) {
+            return ResultJson.failure(ResultCode.UNAUTHORIZED);
+        }
+        if (StringUtils.isAnyBlank(userExt.getPassword(),userExt.getNewPassword())) {
+            return ResultJson.failure(ResultCode.BAD_REQUEST);
+        }
+        authService.chgPassword(token,userExt);
+        return ResultJson.ok();
+    }
+
 //    @GetMapping(value = "refresh")
 //    @ApiOperation(value = "刷新token")
 //    public ResultJson refreshAndGetAuthenticationToken(
