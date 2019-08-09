@@ -16,7 +16,10 @@ public class UserDetail implements UserDetails {
     private Role role;
     private Date lastPasswordResetDate;
 
-
+    public UserDetail(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 
     public UserDetail(
             Integer id,
@@ -29,12 +32,6 @@ public class UserDetail implements UserDetails {
         this.password = password;
         this.role = role;
 //        this.lastPasswordResetDate = lastPasswordResetDate;
-    }
-
-    public UserDetail(String username, String password, Role role) {
-        this.username = username;
-        this.password = password;
-        this.role = role;
     }
 
     public UserDetail(Integer id, String username, String password) {

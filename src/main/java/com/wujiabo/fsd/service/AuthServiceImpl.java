@@ -107,4 +107,10 @@ public class AuthServiceImpl implements AuthService {
             throw new CustomException(ResultJson.failure(ResultCode.LOGIN_ERROR, e.getMessage()));
         }
     }
+
+    public static void main(String[] args) {
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        System.out.println(encoder.encode("123456"));
+    }
 }
