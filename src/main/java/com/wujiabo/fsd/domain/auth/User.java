@@ -11,6 +11,12 @@ public class User {
     @ApiModelProperty(value = "密码", required = true)
     @Size(min=6, max=20)
     private String password;
+    @ApiModelProperty(value = "验证码key", required = false)
+    @Size(min=6, max=20)
+    private String captchaKey;
+    @ApiModelProperty(value = "验证码value", required = false)
+    @Size(min=4, max=20)
+    private String captchaValue;
 
     public String getName() {
         return name;
@@ -26,5 +32,21 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getCaptchaKey() {
+        return captchaKey;
+    }
+
+    public void setCaptchaKey(String captchaKey) {
+        this.captchaKey = captchaKey;
+    }
+
+    public String getCaptchaValue() {
+        return captchaValue;
+    }
+
+    public void setCaptchaValue(String captchaValue) {
+        this.captchaValue = captchaValue;
     }
 }

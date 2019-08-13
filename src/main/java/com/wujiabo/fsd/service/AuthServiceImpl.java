@@ -2,10 +2,7 @@ package com.wujiabo.fsd.service;
 
 import com.wujiabo.fsd.domain.ResultCode;
 import com.wujiabo.fsd.domain.ResultJson;
-import com.wujiabo.fsd.domain.auth.ResponseUserToken;
-import com.wujiabo.fsd.domain.auth.Role;
-import com.wujiabo.fsd.domain.auth.UserDetail;
-import com.wujiabo.fsd.domain.auth.UserExt;
+import com.wujiabo.fsd.domain.auth.*;
 import com.wujiabo.fsd.exception.CustomException;
 import com.wujiabo.fsd.mapper.AuthMapper;
 import com.wujiabo.fsd.utils.JwtUtils;
@@ -64,16 +61,17 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ResponseUserToken login(String username, String password) {
+    public ResponseUserToken login(User user) {
+        checkCaptcha(user.getCaptchaKey(),user.getCaptchaValue());
         //用户验证
-        final Authentication authentication = authenticate(username, password);
+        final Authentication authentication = authenticate(user.getName(), user.getPassword());
         //存储认证信息
         SecurityContextHolder.getContext().setAuthentication(authentication);
         //生成token
         final UserDetail userDetail = (UserDetail) authentication.getPrincipal();
         final String token = jwtTokenUtil.generateAccessToken(userDetail);
         //存储token
-        jwtTokenUtil.putToken(username, token);
+        jwtTokenUtil.putToken(user.getName(), token);
         return new ResponseUserToken(token, userDetail);
 
     }
@@ -130,6 +128,16 @@ public class AuthServiceImpl implements AuthService {
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (DisabledException | BadCredentialsException e) {
             throw new CustomException(ResultJson.failure(ResultCode.LOGIN_ERROR, e.getMessage()));
+        }
+    }
+
+    private void checkCaptcha(String captchaKey,String captchaValue){
+        if(StringUtils.isBlank(captchaKey) || StringUtils.isBlank(captchaValue) ){
+            throw new CustomException(ResultJson.failure(ResultCode.BAD_REQUEST, "验证码信息不全"));
+        }
+        String _captchaValue = authMapper.findCaptchaValue(captchaKey);
+        if(!StringUtils.equals(_captchaValue,captchaValue)){
+            throw new CustomException(ResultJson.failure(ResultCode.BAD_REQUEST, "验证码错误"));
         }
     }
 

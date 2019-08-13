@@ -40,7 +40,7 @@ public class AuthController {
     @ApiOperation(value = "登陆", notes = "登陆成功返回token,测试管理员账号:admin,123456;用户账号：test,admin")
     public ResultJson<ResponseUserToken> login(
             @Valid @RequestBody User user){
-        final ResponseUserToken response = authService.login(user.getName(), user.getPassword());
+        final ResponseUserToken response = authService.login(user);
         return ResultJson.ok(response);
     }
 

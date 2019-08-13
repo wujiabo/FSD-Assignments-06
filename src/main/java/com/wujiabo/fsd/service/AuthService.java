@@ -1,6 +1,7 @@
 package com.wujiabo.fsd.service;
 
 import com.wujiabo.fsd.domain.auth.ResponseUserToken;
+import com.wujiabo.fsd.domain.auth.User;
 import com.wujiabo.fsd.domain.auth.UserDetail;
 import com.wujiabo.fsd.domain.auth.UserExt;
 
@@ -14,11 +15,10 @@ public interface AuthService {
 
     /**
      * 登陆
-     * @param username
-     * @param password
+     * @param user
      * @return
      */
-    ResponseUserToken login(String username, String password);
+    ResponseUserToken login(User user);
 
     /**
      * 登出
