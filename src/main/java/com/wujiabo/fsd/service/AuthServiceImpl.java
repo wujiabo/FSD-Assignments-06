@@ -109,7 +109,7 @@ public class AuthServiceImpl implements AuthService {
         String userName = jwtTokenUtil.getUsernameFromToken(token);
         UserDetail userDetail = authMapper.findByUsername(userName);
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if(!StringUtils.equals(encoder.encode(userExt.getPassword()),userDetail.getPassword())){
+        if(!encoder.matches(userExt.getPassword(), userDetail.getPassword())){
             throw new CustomException(ResultJson.failure(ResultCode.BAD_REQUEST, "密码验证错误"));
         }
         userDetail.setPassword(encoder.encode(userExt.getNewPassword()));
@@ -128,6 +128,6 @@ public class AuthServiceImpl implements AuthService {
     public static void main(String[] args) {
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        System.out.println(encoder.encode("123456"));
+        System.out.println(encoder.encode("string"));
     }
 }
