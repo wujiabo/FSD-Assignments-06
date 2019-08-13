@@ -74,6 +74,7 @@ public class AuthController {
 
     @PostMapping(value = "/chgPwd")
     @ApiOperation(value = "修改密码")
+    @ApiImplicitParams({@ApiImplicitParam(name = "Authorization", value = "Authorization token", required = true, dataType = "string", paramType = "header")})
     public ResultJson chgPassword(HttpServletRequest request,@RequestBody UserExt userExt) {
         String token = request.getHeader(tokenHeader);
         if (token == null) {

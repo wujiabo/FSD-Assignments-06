@@ -11,6 +11,7 @@ public interface AuthMapper {
     UserDetail findByUsername(@Param("name") String name);
 
     @Insert("insert into sys_user (name, password) VALUES (#{username}, #{password})")
+    @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
     void insert(UserDetail userDetail);
 
     @Insert("insert into sys_user_role (user_id, role_id) VALUES (#{userId}, #{roleId})")

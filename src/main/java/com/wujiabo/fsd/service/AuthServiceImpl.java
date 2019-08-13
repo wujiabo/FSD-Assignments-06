@@ -108,10 +108,10 @@ public class AuthServiceImpl implements AuthService {
         token = token.substring(tokenHead.length());
         String userName = jwtTokenUtil.getUsernameFromToken(token);
         UserDetail userDetail = authMapper.findByUsername(userName);
-        if(!StringUtils.equals(userExt.getPassword(),userDetail.getPassword())){
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        if(!StringUtils.equals(encoder.encode(userExt.getPassword()),userDetail.getPassword())){
             throw new CustomException(ResultJson.failure(ResultCode.BAD_REQUEST, "密码验证错误"));
         }
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         userDetail.setPassword(encoder.encode(userExt.getNewPassword()));
         authMapper.updatePassword(userDetail);
     }
