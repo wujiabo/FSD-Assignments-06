@@ -16,3 +16,8 @@ CREATE TABLE sys_user_role (
   role_id int(11),
   PRIMARY KEY (id)
 );
+CREATE TABLE sys_captcha (
+  captcha_key varchar(64) NOT NULL,
+  captcha_value varchar(64),
+  PRIMARY KEY (captcha_key)
+);

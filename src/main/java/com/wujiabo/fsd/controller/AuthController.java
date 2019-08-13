@@ -1,5 +1,6 @@
 package com.wujiabo.fsd.controller;
 
+import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.wujiabo.fsd.domain.ResultCode;
 import com.wujiabo.fsd.domain.ResultJson;
 import com.wujiabo.fsd.domain.auth.*;
@@ -13,8 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 @RestController
 @Api(description = "登陆注册及刷新token")
@@ -23,15 +29,15 @@ public class AuthController {
     @Value("${jwt.header}")
     private String tokenHeader;
 
-    private final AuthService authService;
+    @Autowired
+    private AuthService authService;
 
     @Autowired
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
+    private DefaultKaptcha defaultKaptcha;
+
 
     @PostMapping(value = "/login")
-    @ApiOperation(value = "登陆", notes = "登陆成功返回token,测试管理员账号:admin,123456;用户账号：les123,admin")
+    @ApiOperation(value = "登陆", notes = "登陆成功返回token,测试管理员账号:admin,123456;用户账号：test,admin")
     public ResultJson<ResponseUserToken> login(
             @Valid @RequestBody User user){
         final ResponseUserToken response = authService.login(user.getName(), user.getPassword());
@@ -87,6 +93,18 @@ public class AuthController {
         return ResultJson.ok();
     }
 
+    @GetMapping("/captcha.jpg")
+    @ApiOperation(value = "验证码图片")
+    public void captcha(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Cache-Control", "no-store, no-cache");
+        response.setContentType("image/jpeg");
+        String text = defaultKaptcha.createText();
+        BufferedImage image = defaultKaptcha.createImage(text);
+        String captchaKey = authService.saveCaptcha(text);
+        response.setHeader("captcha_key",captchaKey);
+        ServletOutputStream out = response.getOutputStream();
+        ImageIO.write(image, "jpg", out);
+    }
 //    @GetMapping(value = "refresh")
 //    @ApiOperation(value = "刷新token")
 //    public ResultJson refreshAndGetAuthenticationToken(

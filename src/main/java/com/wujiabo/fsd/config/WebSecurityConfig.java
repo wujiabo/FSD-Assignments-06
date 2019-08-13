@@ -1,5 +1,7 @@
 package com.wujiabo.fsd.config;
 
+import com.google.code.kaptcha.impl.DefaultKaptcha;
+import com.google.code.kaptcha.util.Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +19,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.Properties;
 
 @Configuration
 @EnableWebSecurity
@@ -73,7 +77,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
 
                 // 对于获取token的rest api要允许匿名访问
-                .antMatchers("/api/v1/login", "/api/v1/sign", "/error/**").permitAll()
+                .antMatchers("/api/v1/captcha.jpg","/api/v1/login", "/api/v1/sign", "/error/**").permitAll()
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated();
 
@@ -113,5 +117,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+
+    @Bean
+    public DefaultKaptcha defaultKaptcha(){
+
+        Properties properties = new Properties();
+        properties.setProperty("kaptcha.border","no");
+        properties.setProperty("kaptcha.textproducer.font.color","black");
+        properties.setProperty("kaptcha.textproducer.char.space","4");
+        Config config = new Config(properties);
+
+        DefaultKaptcha defaultKaptcha = new DefaultKaptcha();
+        defaultKaptcha.setConfig(config);
+        return defaultKaptcha;
     }
 }

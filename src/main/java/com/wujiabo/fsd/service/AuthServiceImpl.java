@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -114,6 +115,13 @@ public class AuthServiceImpl implements AuthService {
         }
         userDetail.setPassword(encoder.encode(userExt.getNewPassword()));
         authMapper.updatePassword(userDetail);
+    }
+
+    @Override
+    public String saveCaptcha(String captchaValue) {
+        String captchaKey = UUID.randomUUID().toString();
+        authMapper.insertCaptcha(captchaKey,captchaValue);
+        return captchaKey;
     }
 
     private Authentication authenticate(String username, String password) {

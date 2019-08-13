@@ -25,4 +25,10 @@ public interface AuthMapper {
 
     @Update("update sys_user set password=#{password} where name = #{username}")
     void updatePassword(UserDetail userDetail);
+
+    @Insert("insert into sys_captcha (captcha_key, captcha_value) VALUES (#{captchaKey}, #{captchaValue})")
+    void insertCaptcha(@Param("captchaKey")String captchaKey, @Param("captchaValue")String captchaValue);
+
+    @Select("SELECT captcha_value from sys_captcha where captcha_key = #{captchaKey}")
+    String findCaptchaValue(@Param("captchaKey") String captchaKey);
 }

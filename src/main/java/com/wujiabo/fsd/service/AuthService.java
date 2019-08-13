@@ -46,4 +46,11 @@ public interface AuthService {
      * @param userExt
      */
     void chgPassword(String token, UserExt userExt);
+
+    /**
+     * 保持验证码对应关系
+     * @param text
+     * @return
+     */
+    String saveCaptcha(String text);
 }
