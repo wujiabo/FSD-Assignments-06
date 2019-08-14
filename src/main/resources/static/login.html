@@ -44,7 +44,7 @@
         var fsd_token = localStorage.getItem("fsd_token");
         if(fsd_token){
             $.ajax({
-                type : "POST",
+                type : "GET",
                 contentType: "application/json;charset=UTF-8",
                 url : "/api/v1/user",
                 headers: {
