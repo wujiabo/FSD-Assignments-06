@@ -13,7 +13,7 @@ public class User {
     private String password;
     @ApiModelProperty(value = "验证码", required = false)
     @Size(min=4, max=20)
-    private String Kaptcha;
+    private String kaptcha;
 
     public String getName() {
         return name;
@@ -32,10 +32,10 @@ public class User {
     }
 
     public String getKaptcha() {
-        return Kaptcha;
+        return kaptcha;
     }
 
     public void setKaptcha(String kaptcha) {
-        Kaptcha = kaptcha;
+        kaptcha = kaptcha;
     }
 }

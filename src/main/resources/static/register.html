@@ -50,6 +50,31 @@
         window.location.href="/login.html";
     }
     function register(){
+        var list = {
+          "kaptcha": $("#kaptcha").val(),
+          "password": $("#password").val(),
+          "name": $("#username").val()
+        };
+        $.ajax({
+            type : "POST",
+            contentType: "application/json;charset=UTF-8",
+            url : "/api/v1/sign",
+            data : JSON.stringify(list),
+            success : function(result) {
+                refresh();
+                if(result.code == 200){
+                    alert(result.msg);
+                }else{
+                    alert(result.data);
+                }
+                console.log(result);
+            },
+            error : function(e){
+                refresh();
+                console.log(e.status);
+                console.log(e.responseText);
+            }
+        });
     }
 </script>
 </body>
