@@ -44,7 +44,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public UserDetail register(UserDetail userDetail) {
+    public UserDetail register(UserDetail userDetail, User user) {
+        checkCaptcha(user.getCaptchaKey(),user.getCaptchaValue());
         final String username = userDetail.getUsername();
         if(authMapper.findByUsername(username)!=null) {
             throw new CustomException(ResultJson.failure(ResultCode.BAD_REQUEST, "用户已存在"));
@@ -104,6 +105,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public void chgPassword(String token, UserExt userExt) {
+        checkCaptcha(userExt.getCaptchaKey(),userExt.getCaptchaValue());
         token = token.substring(tokenHead.length());
         String userName = jwtTokenUtil.getUsernameFromToken(token);
         UserDetail userDetail = authMapper.findByUsername(userName);
@@ -139,6 +141,7 @@ public class AuthServiceImpl implements AuthService {
         if(!StringUtils.equals(_captchaValue,captchaValue)){
             throw new CustomException(ResultJson.failure(ResultCode.BAD_REQUEST, "验证码错误"));
         }
+        authMapper.deleteCaptcha(captchaKey);
     }
 
     public static void main(String[] args) {

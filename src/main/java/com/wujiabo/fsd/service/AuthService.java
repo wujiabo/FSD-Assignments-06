@@ -9,9 +9,10 @@ public interface AuthService {
     /**
      * 注册用户
      * @param userDetail
+     * @param user
      * @return
      */
-    UserDetail register(UserDetail userDetail);
+    UserDetail register(UserDetail userDetail, User user);
 
     /**
      * 登陆

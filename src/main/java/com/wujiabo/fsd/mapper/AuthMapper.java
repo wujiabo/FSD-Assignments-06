@@ -31,4 +31,7 @@ public interface AuthMapper {
 
     @Select("SELECT captcha_value from sys_captcha where captcha_key = #{captchaKey}")
     String findCaptchaValue(@Param("captchaKey") String captchaKey);
+
+    @Delete("delete from sys_captcha where captcha_key = #{captchaKey}")
+    void deleteCaptcha(String captchaKey);
 }

@@ -75,7 +75,7 @@ public class AuthController {
             return ResultJson.failure(ResultCode.BAD_REQUEST);
         }
         UserDetail userDetail = new UserDetail(user.getName(), user.getPassword());
-        return ResultJson.ok(authService.register(userDetail));
+        return ResultJson.ok(authService.register(userDetail,user));
     }
 
     @PostMapping(value = "/chgPwd")
