@@ -40,6 +40,9 @@
     </tr>
 </table>
 <script>
+    $(document).ready(function(){
+
+    })
     function refresh(obj) {
         obj.src = "/api/v1/captcha.jpg?t=" + new Date().getMilliseconds();
     }

@@ -45,7 +45,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public UserDetail register(UserDetail userDetail, User user) {
-        checkCaptcha(user.getCaptchaKey(),user.getCaptchaValue());
         final String username = userDetail.getUsername();
         if(authMapper.findByUsername(username)!=null) {
             throw new CustomException(ResultJson.failure(ResultCode.BAD_REQUEST, "用户已存在"));
@@ -63,7 +62,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseUserToken login(User user) {
-        checkCaptcha(user.getCaptchaKey(),user.getCaptchaValue());
         //用户验证
         final Authentication authentication = authenticate(user.getName(), user.getPassword());
         //存储认证信息
@@ -105,7 +103,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public void chgPassword(String token, UserExt userExt) {
-        checkCaptcha(userExt.getCaptchaKey(),userExt.getCaptchaValue());
         token = token.substring(tokenHead.length());
         String userName = jwtTokenUtil.getUsernameFromToken(token);
         UserDetail userDetail = authMapper.findByUsername(userName);

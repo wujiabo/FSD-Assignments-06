@@ -4,6 +4,7 @@ import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.wujiabo.fsd.domain.ResultCode;
 import com.wujiabo.fsd.domain.ResultJson;
 import com.wujiabo.fsd.domain.auth.*;
+import com.wujiabo.fsd.exception.CustomException;
 import com.wujiabo.fsd.service.AuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -38,8 +39,11 @@ public class AuthController {
 
     @PostMapping(value = "/login")
     @ApiOperation(value = "登陆", notes = "登陆成功返回token,测试管理员账号:admin,123456;用户账号：test,admin")
-    public ResultJson<ResponseUserToken> login(
+    public ResultJson<ResponseUserToken> login(HttpServletRequest request,
             @Valid @RequestBody User user){
+        if (StringUtils.isEmpty(user.getKaptcha()) || !request.getSession().getAttribute("CHECK_CODE").toString().equals(user.getKaptcha())) {
+            throw new CustomException(ResultJson.failure(ResultCode.BAD_REQUEST, "验证码错误"));
+        }
         final ResponseUserToken response = authService.login(user);
         return ResultJson.ok(response);
     }
@@ -70,9 +74,12 @@ public class AuthController {
 
     @PostMapping(value = "/sign")
     @ApiOperation(value = "用户注册")
-    public ResultJson sign(@RequestBody User user) {
+    public ResultJson sign(HttpServletRequest request,@RequestBody User user) {
         if (StringUtils.isAnyBlank(user.getName(), user.getPassword())) {
             return ResultJson.failure(ResultCode.BAD_REQUEST);
+        }
+        if (StringUtils.isEmpty(user.getKaptcha()) || !request.getSession().getAttribute("CHECK_CODE").toString().equals(user.getKaptcha())) {
+            throw new CustomException(ResultJson.failure(ResultCode.BAD_REQUEST, "验证码错误"));
         }
         UserDetail userDetail = new UserDetail(user.getName(), user.getPassword());
         return ResultJson.ok(authService.register(userDetail,user));
@@ -89,6 +96,9 @@ public class AuthController {
         if (StringUtils.isAnyBlank(userExt.getPassword(),userExt.getNewPassword())) {
             return ResultJson.failure(ResultCode.BAD_REQUEST);
         }
+        if (StringUtils.isEmpty(userExt.getKaptcha()) || !request.getSession().getAttribute("CHECK_CODE").toString().equals(userExt.getKaptcha())) {
+            throw new CustomException(ResultJson.failure(ResultCode.BAD_REQUEST, "验证码错误"));
+        }
         authService.chgPassword(token,userExt);
         return ResultJson.ok();
     }
@@ -100,8 +110,7 @@ public class AuthController {
         response.setContentType("image/jpeg");
         String text = defaultKaptcha.createText();
         BufferedImage image = defaultKaptcha.createImage(text);
-        String captchaKey = authService.saveCaptcha(text);
-        response.setHeader("captcha_key",captchaKey);
+        request.getSession().setAttribute("CHECK_CODE", text);
         ServletOutputStream out = response.getOutputStream();
         ImageIO.write(image, "jpg", out);
     }
