@@ -34,7 +34,7 @@
     </tr>
     <tr>
         <td>
-            <img src="/api/v1/captcha.jpg" style="width: 100px;" onclick="refresh(this)" >
+            <img src="/api/v1/captcha.jpg" id="captcha" style="width: 100px;" onclick="refresh()" >
         </td>
         <td>
             <input type="text" id="kaptcha"/>
@@ -76,8 +76,8 @@ $(document).ready(function(){
             window.location.href="/login.html";
         }
     })
-    function refresh(obj) {
-        obj.src = "/api/v1/captcha.jpg?t=" + new Date().getMilliseconds();
+    function refresh() {
+        $("#captcha").attr("src","/api/v1/captcha.jpg?t=" + new Date().getMilliseconds());
     }
     function update(){
         var list = {
@@ -97,11 +97,13 @@ $(document).ready(function(){
                 if(result.code == 200){
                     alert(result.msg);
                 }else{
+                    refresh();
                     alert(result.data);
                 }
                 console.log(result);
             },
             error : function(e){
+                refresh();
                 console.log(e.status);
                 console.log(e.responseText);
             }
