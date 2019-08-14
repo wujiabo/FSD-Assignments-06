@@ -80,6 +80,32 @@ $(document).ready(function(){
         obj.src = "/api/v1/captcha.jpg?t=" + new Date().getMilliseconds();
     }
     function update(){
+        var list = {
+          "kaptcha": $("#kaptcha").val(),
+          "password": $("#password").val(),
+          "newPassword": $("#newPassword").val()
+        };
+        $.ajax({
+            type : "POST",
+            contentType: "application/json;charset=UTF-8",
+            url : "/api/v1/chgPwd",
+            headers: {
+                Authorization: "Bearer "+localStorage.getItem("fsd_token")
+            },
+            data : JSON.stringify(list),
+            success : function(result) {
+                if(result.code == 200){
+                    alert(result.msg);
+                }else{
+                    alert(result.data);
+                }
+                console.log(result);
+            },
+            error : function(e){
+                console.log(e.status);
+                console.log(e.responseText);
+            }
+        });
     }
 </script>
 </body>
