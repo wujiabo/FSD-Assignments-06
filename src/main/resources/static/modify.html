@@ -7,5 +7,44 @@
 </head>
 <body>
 
+<table>
+    <tr>
+        <td>
+            User Name :
+        </td>
+        <td>
+            <input type="text" name="username"/>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Password :
+        </td>
+        <td>
+            <input type="password" name="password"/>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="/api/v1/captcha.jpg" style="width: 100px;" onclick="refresh(this)" >
+        </td>
+        <td>
+            <input type="text" name="kaptcha"/>
+        </td>
+    </tr>
+    <tr>
+        <td><input type="button" value="Update" onclick="update()"/>
+        </td>
+        <td>
+        </td>
+    </tr>
+</table>
+<script>
+    function refresh(obj) {
+        obj.src = "/api/v1/captcha.jpg?t=" + new Date().getMilliseconds();
+    }
+    function update(){
+    }
+</script>
 </body>
 </html>
