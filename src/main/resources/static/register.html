@@ -26,7 +26,7 @@
     </tr>
     <tr>
         <td>
-            <img src="/api/v1/captcha.jpg" style="width: 100px;" onclick="refresh(this)" >
+            <img src="/api/v1/captcha.jpg"  id="captcha" style="width: 100px;" onclick="refresh()" >
         </td>
         <td>
             <input type="text" id="kaptcha"/>
@@ -43,8 +43,8 @@
     $(document).ready(function(){
 
     })
-    function refresh(obj) {
-        obj.src = "/api/v1/captcha.jpg?t=" + new Date().getMilliseconds();
+    function refresh() {
+        $("#captcha").attr("src","/api/v1/captcha.jpg?t=" + new Date().getMilliseconds());
     }
     function toLogin(){
         window.location.href="/login.html";
