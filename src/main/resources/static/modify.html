@@ -13,7 +13,7 @@
             User Name :
         </td>
         <td>
-            <input type="text" name="username"/>
+            <input type="text" id="username" disabled/>
         </td>
     </tr>
     <tr>
@@ -21,7 +21,7 @@
             Password :
         </td>
         <td>
-            <input type="password" name="password"/>
+            <input type="password" id="password"/>
         </td>
     </tr>
     <tr>
@@ -29,7 +29,7 @@
             New Password :
         </td>
         <td>
-            <input type="password" name="newPassword"/>
+            <input type="password" id="newPassword"/>
         </td>
     </tr>
     <tr>
@@ -37,7 +37,7 @@
             <img src="/api/v1/captcha.jpg" style="width: 100px;" onclick="refresh(this)" >
         </td>
         <td>
-            <input type="text" name="kaptcha"/>
+            <input type="text" id="kaptcha"/>
         </td>
     </tr>
     <tr>
@@ -48,6 +48,34 @@
     </tr>
 </table>
 <script>
+$(document).ready(function(){
+        var fsd_token = localStorage.getItem("fsd_token");
+        if(fsd_token){
+            $.ajax({
+                type : "GET",
+                contentType: "application/json;charset=UTF-8",
+                url : "/api/v1/user",
+                headers: {
+                    Authorization: "Bearer "+fsd_token
+                },
+                success : function(result) {
+                    console.log(result);
+                    if(result.code == 200){
+                        $("#username").val(result.data.username);
+                    }else{
+                        window.location.href="/login.html";
+                    }
+                },
+                error : function(e){
+                    console.log(e.status);
+                    console.log(e.responseText);
+                    window.location.href="/login.html";
+                }
+            });
+        }else{
+            window.location.href="/login.html";
+        }
+    })
     function refresh(obj) {
         obj.src = "/api/v1/captcha.jpg?t=" + new Date().getMilliseconds();
     }
