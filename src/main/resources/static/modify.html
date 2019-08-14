@@ -43,7 +43,7 @@
     <tr>
         <td><input type="button" value="Update" onclick="update()"/>
         </td>
-        <td>
+        <td><input type="button" value="Logout" onclick="logout()"/>
         </td>
     </tr>
 </table>
@@ -79,6 +79,29 @@ $(document).ready(function(){
     function refresh() {
         $("#captcha").attr("src","/api/v1/captcha.jpg?t=" + new Date().getMilliseconds());
     }
+    function logout(){
+        $.ajax({
+            type : "GET",
+            contentType: "application/json;charset=UTF-8",
+            url : "/api/v1/logout",
+            headers: {
+                Authorization: "Bearer "+localStorage.getItem("fsd_token")
+            },
+            success : function(result) {
+                if(result.code == 200){
+                    window.location.href="/login.html";
+                }else{
+                    alert(result.data);
+                }
+                console.log(result);
+            },
+            error : function(e){
+                refresh();
+                console.log(e.status);
+                console.log(e.responseText);
+            }
+        });
+    }
     function update(){
         var list = {
           "kaptcha": $("#kaptcha").val(),
@@ -94,10 +117,10 @@ $(document).ready(function(){
             },
             data : JSON.stringify(list),
             success : function(result) {
+                refresh();
                 if(result.code == 200){
                     alert(result.msg);
                 }else{
-                    refresh();
                     alert(result.data);
                 }
                 console.log(result);
