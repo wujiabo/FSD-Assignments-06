@@ -36,6 +36,6 @@ public class User {
     }
 
     public void setKaptcha(String kaptcha) {
-        kaptcha = kaptcha;
+        this.kaptcha = kaptcha;
     }
 }
