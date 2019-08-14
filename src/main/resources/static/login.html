@@ -12,7 +12,7 @@
             User Name :
         </td>
         <td>
-            <input type="text" name="username"/>
+            <input type="text" id="username"/>
         </td>
     </tr>
     <tr>
@@ -20,7 +20,7 @@
             Password :
         </td>
         <td>
-            <input type="password" name="password"/>
+            <input type="password" id="password"/>
         </td>
     </tr>
     <tr>
@@ -28,7 +28,7 @@
             <img src="/api/v1/captcha.jpg" style="width: 100px;" onclick="refresh(this)" >
         </td>
         <td>
-            <input type="text" name="kaptcha"/>
+            <input type="text" id="kaptcha"/>
         </td>
     </tr>
     <tr>
@@ -50,6 +50,30 @@
         window.location.href="/register.html";
     }
     function login(){
+        var list = {
+          "kaptcha": $("#kaptcha").val(),
+          "name": $("#username").val(),
+          "password": $("#password").val()
+        };
+        $.ajax({
+            type : "POST",
+            contentType: "application/json;charset=UTF-8",
+            url : "/api/v1/login",
+            data : JSON.stringify(list),
+            success : function(result) {
+                debugger
+                if(result.code == 200){
+                    window.location.href="/modify.html";
+                }else{
+                    alert(result.msg);
+                }
+                console.log(result);
+            },
+            error : function(e){
+                console.log(e.status);
+                console.log(e.responseText);
+            }
+        });
     }
 </script>
 </body>
