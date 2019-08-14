@@ -41,7 +41,27 @@
 </table>
 <script>
     $(document).ready(function(){
-
+        var fsd_token = localStorage.getItem("fsd_token");
+        if(fsd_token){
+            $.ajax({
+                type : "POST",
+                contentType: "application/json;charset=UTF-8",
+                url : "/api/v1/user",
+                headers: {
+                    Authorization: "Bearer "+fsd_token
+                },
+                success : function(result) {
+                    if(result.code == 200){
+                        window.location.href="/modify.html";
+                    }
+                    console.log(result);
+                },
+                error : function(e){
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        }
     })
     function refresh(obj) {
         obj.src = "/api/v1/captcha.jpg?t=" + new Date().getMilliseconds();
@@ -61,11 +81,11 @@
             url : "/api/v1/login",
             data : JSON.stringify(list),
             success : function(result) {
-                debugger
                 if(result.code == 200){
+                    localStorage.setItem("fsd_token", result.data.token);
                     window.location.href="/modify.html";
                 }else{
-                    alert(result.msg);
+                    alert(result.data);
                 }
                 console.log(result);
             },
